@@ -19,12 +19,12 @@ public class CarController {
 
     @PostMapping
     public ResponseEntity<Car> create(@RequestBody Car car) {
-        return new ResponseEntity<>(this.carService.save(car), HttpStatus.OK);
+        return ResponseEntity.ok(this.carService.save(car));
     }
 
     @GetMapping
     public ResponseEntity<List<Car>> findAllCars() {
-        return new ResponseEntity<>(this.carService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(this.carService.findAll());
     }
 
     @GetMapping("{id}")
@@ -32,9 +32,9 @@ public class CarController {
 
         Optional<Car> optionalCar = this.carService.findById(id);
         if (optionalCar.isPresent()) {
-            return new ResponseEntity<>(optionalCar.get(), HttpStatus.OK);
+            return ResponseEntity.ok(optionalCar.get());
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -43,15 +43,15 @@ public class CarController {
 
         Optional<Car> optionalCar = this.carService.update(source, id);
         if (optionalCar.isPresent()) {
-            return new ResponseEntity<>(optionalCar.get(), HttpStatus.OK);
+            return ResponseEntity.ok(optionalCar.get());
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping
-    public ResponseEntity<Car> deleteById(@PathVariable  long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable  long id) {
         this.carService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
