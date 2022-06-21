@@ -54,4 +54,9 @@ public class CarController {
         this.carService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("mileage/{mileage}")
+    public List<Car> findByMileage(@PathVariable int mileage) {
+        return carService.findByMileage(mileage);
+    }
 }

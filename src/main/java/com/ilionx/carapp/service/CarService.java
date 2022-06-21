@@ -5,6 +5,7 @@ import com.ilionx.carapp.persistence.CarRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -66,6 +67,10 @@ public class CarService {
     @Transactional
     public void deleteById(Long aLong) {
         carRepository.deleteById(aLong);
+    }
+
+    public List<Car> findByMileage(int mileage) {
+        return carRepository.findByMileage(mileage);
     }
 
     // No transaction will (ever) be started here since it is a call to a method in the SAME CLASS!!!
