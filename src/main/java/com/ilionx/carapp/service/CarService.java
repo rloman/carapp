@@ -2,13 +2,16 @@ package com.ilionx.carapp.service;
 
 import com.ilionx.carapp.model.Car;
 import com.ilionx.carapp.persistence.CarRepository;
+import com.ilionx.carapp.validator.KentekenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,9 @@ import java.util.Optional;
 public class CarService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CarService.class);
+
+    @Autowired
+    private KentekenValidator kentekenValidator;
 
     @Autowired
     private CarRepository carRepository;
@@ -76,5 +82,11 @@ public class CarService {
     // No transaction will (ever) be started here since it is a call to a method in the SAME CLASS!!!
     public void foo() {
         this.save(new Car());
+    }
+
+    public List<Car> findInvalids() {
+        System.err.println(KentekenValidator.REGEXP_KENTEKEN_FORMAT);
+
+        return this.carRepository.findInvalids(KentekenValidator.REGEXP_KENTEKEN_FORMAT);
     }
 }

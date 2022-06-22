@@ -16,4 +16,10 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query(value = "select id, brand, license_plate, mileage from car where mileage=?1", nativeQuery = true)
     List<Car> findByMileage(int mileage);
+
+    @Query(value = "select id, brand, license_plate, mileage from car where mileage=?1", nativeQuery = true)
+    List<Car> findByMileageNotNative(int mileage);
+
+    @Query(value="select * from Car where license_plate REGEXP '?1'", nativeQuery = true)
+    List<Car> findInvalids(String regexp);
 }
