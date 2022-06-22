@@ -17,6 +17,10 @@ public class Car {
     private String licensePlate;
     private int mileage;
 
+    public void setId(long id){
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
