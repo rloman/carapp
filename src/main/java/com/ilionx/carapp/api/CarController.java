@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/cars")
+@RequestMapping(CarController.url)
 public class CarController {
+
+    public static final String url = "/api/cars";
 
     @Autowired
     private CarService carService;

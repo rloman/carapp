@@ -34,11 +34,6 @@ public class CarService {
     public Car save(Car car) {
         Car savedCar = this.carRepository.save(car);
         // if car.brand == 'stophier' then it demo's a save and a Transaction rollback
-        if ("stophier".equals(savedCar.getBrand())) {
-            LOGGER.warn("The car is saved with id:[{}] but that transaction will be rolled back", savedCar.getId());
-            // create a RuntimeException on purpose
-            System.out.println(3/0);
-        }
 
         return savedCar;
     }

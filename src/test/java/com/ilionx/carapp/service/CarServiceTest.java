@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,6 +23,26 @@ public class CarServiceTest {
 
     public CarServiceTest() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testSave() {
+
+        // Given
+        Car car = new Car();
+        car.setBrand("Kia");
+        car.setMileage(97000);
+        car.setLicensePlate("GZ120H");
+        car.setId(3L);
+        Mockito.when(this.carRepository.save(car)).thenReturn(car);
+
+        //When
+        Car savedCar = this.carService.save(car);
+
+        // Then
+        Mockito.verify(this.carRepository).save(car);
+        assertEquals("Kia", savedCar.getBrand());
+        assertEquals(97000, savedCar.getMileage());
     }
 
     @Test
