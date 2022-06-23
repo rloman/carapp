@@ -47,7 +47,7 @@ public class CarService {
             target.setLicensePlate(source.getLicensePlate());
             target.setMileage(source.getMileage());
 
-            return optionalCar;
+            return Optional.of(this.save(target));
         } else {
             return Optional.empty();
         }
