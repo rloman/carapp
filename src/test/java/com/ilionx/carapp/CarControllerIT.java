@@ -9,10 +9,17 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalManagementPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +32,9 @@ public class CarControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate; // sort of Postman
+
+    @LocalServerPort
+    private int localServerPort;
 
     @Test
     @Order(1)
@@ -67,16 +77,32 @@ public class CarControllerIT {
     @Test
     @Order(2)
     public void testList() {
-        ResponseEntity<ArrayList> response  = this.restTemplate.getForEntity(CarController.url, ArrayList.class);
-        ArrayList responseBodyAsList = response.getBody();
-        assertNotNull(responseBodyAsList);
+        // Arrange
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("accept", "application/json");
+        HttpEntity requestEntity = new HttpEntity<>(null, headers);
+
+        // Act
+        ResponseEntity<List<Car>> response = restTemplate.exchange(CarController.url,
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<List<Car>>() {
+                });
+        List<Car> responseBodyAsList = response.getBody();
+
+        // Assert
         assertEquals(2, responseBodyAsList.size());
-        for (Object element : responseBodyAsList) {
-            Car car = (Car) element;
-            System.err.println(car);
+
+        int counter = 0;
+        for(Car car: responseBodyAsList ) {
+            if(car.getLicensePlate().equals("R-095-FK") && car.getMileage()==5306) {
+                counter++;
+            }
+            if("GZ120H".equals(car.getLicensePlate()) && car.getMileage()==97001) {
+                counter++;
+            }
         }
-//        Car responsedCar = response.getBody();
-//        assertEquals(97001, responsedCar.getMileage());
+        assertEquals(2, counter);
     }
 
     @Test
