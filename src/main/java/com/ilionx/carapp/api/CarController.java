@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequestMapping(CarController.url)
 public class CarController {
 
-    public static final String url = "/api/cars";
+    public static final String url = "/api/cars"; // let op dat je de prefix-slash nodig hebt anders doet de IT het niet!!!
 
     @Autowired
     private CarService carService;
