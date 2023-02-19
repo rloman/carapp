@@ -12,6 +12,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,32 +26,65 @@ public class CarControllerIT {
     @Autowired
     private TestRestTemplate restTemplate; // sort of Postman
 
-
-
     @Test
     @Order(1)
     public void testCreateUsingPost() {
-        Car car = new Car();
-        car.setLicensePlate("GZ120H");
-        car.setBrand("Kia");
-        car.setMileage(97001);
+        {
+            Car car = new Car();
+            car.setLicensePlate("GZ120H");
+            car.setBrand("Kia");
+            car.setMileage(97001);
 
-        ResponseEntity<Car> response  = this.restTemplate.postForEntity(CarController.url, car, Car.class);
-        assertEquals(200, response.getStatusCodeValue());
+            ResponseEntity<Car> response  = this.restTemplate.postForEntity(CarController.url, car, Car.class);
+            assertEquals(200, response.getStatusCodeValue());
 
-        Car returnedCar = response.getBody();
-        assertNotEquals(0, returnedCar.getId());
-        assertNotNull(returnedCar);
-        assertEquals("Kia", returnedCar.getBrand());
-        currentId = returnedCar.getId();
+            Car returnedCar = response.getBody();
+            assertNotEquals(0, returnedCar.getId());
+            assertNotNull(returnedCar);
+            assertEquals("Kia", returnedCar.getBrand());
+            assertEquals("GZ120H", returnedCar.getLicensePlate());
+            currentId = returnedCar.getId();
+        }
+        {
+            Car car = new Car();
+            car.setLicensePlate("R-095-FK");
+            car.setBrand("Kia");
+            car.setMileage(5306);
+
+            ResponseEntity<Car> response  = this.restTemplate.postForEntity(CarController.url, car, Car.class);
+            assertEquals(200, response.getStatusCodeValue());
+
+            Car returnedCar = response.getBody();
+            assertNotEquals(0, returnedCar.getId());
+            assertNotNull(returnedCar);
+            assertEquals("Kia", returnedCar.getBrand());
+            assertEquals("R-095-FK", returnedCar.getLicensePlate());
+            currentId = returnedCar.getId();
+        }
+
     }
 
     @Test
     @Order(2)
+    public void testList() {
+        ResponseEntity<ArrayList> response  = this.restTemplate.getForEntity(CarController.url, ArrayList.class);
+        ArrayList responseBodyAsList = response.getBody();
+        assertNotNull(responseBodyAsList);
+        assertEquals(2, responseBodyAsList.size());
+        for (Object element : responseBodyAsList) {
+            Car car = (Car) element;
+            System.err.println(car);
+        }
+//        Car responsedCar = response.getBody();
+//        assertEquals(97001, responsedCar.getMileage());
+    }
+
+    @Test
+    @Order(3)
     public void testFetchit() {
         ResponseEntity<Car> response  = this.restTemplate.getForEntity(CarController.url+"/"+currentId, Car.class);
         assertNotNull(response.getBody());
         Car responsedCar = response.getBody();
-        assertEquals(97001, responsedCar.getMileage());
+        assertEquals(5306, responsedCar.getMileage());
     }
 }
